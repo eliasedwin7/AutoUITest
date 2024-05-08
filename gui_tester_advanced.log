@@ -1,0 +1,91 @@
+2024-05-08 15:18:31,597 - INFO - Clicked Button.left at (104, 1066)
+2024-05-08 15:18:34,334 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145511.png
+2024-05-08 15:18:41,284 - INFO - Clicked Button.left at (104, 1066)
+2024-05-08 15:18:43,960 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145521.png
+2024-05-08 15:18:45,102 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145435.png, New: Clicked_Buttonleft_1715145521.png
+2024-05-08 15:18:45,205 - INFO - Pressed key 'o' ''o''
+2024-05-08 15:18:46,886 - INFO - Pressed key 'o' saved as Pressed_key_'o'_1715145525.png
+2024-05-08 15:18:48,029 - WARNING - Difference found for Pressed key 'o'. Reference: Pressed_key_'o'_1715145437.png, New: Pressed_key_'o'_1715145525.png
+2024-05-08 15:18:48,136 - INFO - Pressed key 'm' ''m''
+2024-05-08 15:18:49,795 - INFO - Pressed key 'm' saved as Pressed_key_'m'_1715145528.png
+2024-05-08 15:18:50,931 - WARNING - Difference found for Pressed key 'm'. Reference: Pressed_key_'m'_1715145438.png, New: Pressed_key_'m'_1715145528.png
+2024-05-08 15:18:51,040 - INFO - Clicked Button.left at (218, 571)
+2024-05-08 15:18:53,638 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145530.png
+2024-05-08 15:18:54,770 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145440.png, New: Clicked_Buttonleft_1715145530.png
+2024-05-08 15:18:54,890 - INFO - Clicked Button.left at (949, 541)
+2024-05-08 15:18:57,123 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145534.png
+2024-05-08 15:18:58,209 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145447.png, New: Clicked_Buttonleft_1715145534.png
+2024-05-08 15:18:58,316 - INFO - Clicked Button.left at (1517, 58)
+2024-05-08 15:19:00,423 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145538.png
+2024-05-08 15:19:01,492 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145449.png, New: Clicked_Buttonleft_1715145538.png
+2024-05-08 15:19:01,622 - INFO - Clicked Button.left at (75, 84)
+2024-05-08 15:19:03,703 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145541.png
+2024-05-08 15:19:04,744 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145450.png, New: Clicked_Buttonleft_1715145541.png
+2024-05-08 15:19:04,869 - INFO - Clicked Button.left at (61, 126)
+2024-05-08 15:19:06,962 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145544.png
+2024-05-08 15:19:07,999 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145451.png, New: Clicked_Buttonleft_1715145544.png
+2024-05-08 15:19:08,108 - INFO - Clicked Button.left at (55, 179)
+2024-05-08 15:19:10,199 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145547.png
+2024-05-08 15:19:11,244 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145452.png, New: Clicked_Buttonleft_1715145547.png
+2024-05-08 15:19:11,356 - INFO - Clicked Button.left at (50, 221)
+2024-05-08 15:19:13,434 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145551.png
+2024-05-08 15:19:14,474 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145453.png, New: Clicked_Buttonleft_1715145551.png
+2024-05-08 15:19:14,595 - INFO - Clicked Button.left at (40, 268)
+2024-05-08 15:19:16,690 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145554.png
+2024-05-08 15:19:17,730 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145454.png, New: Clicked_Buttonleft_1715145554.png
+2024-05-08 15:19:17,855 - INFO - Clicked Button.left at (41, 312)
+2024-05-08 15:19:19,944 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145557.png
+2024-05-08 15:19:20,992 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145455.png, New: Clicked_Buttonleft_1715145557.png
+2024-05-08 15:19:21,114 - INFO - Clicked Button.left at (50, 351)
+2024-05-08 15:19:23,205 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145560.png
+2024-05-08 15:19:24,249 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145455.png, New: Clicked_Buttonleft_1715145560.png
+2024-05-08 15:19:24,369 - INFO - Clicked Button.left at (52, 391)
+2024-05-08 15:19:26,466 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145564.png
+2024-05-08 15:19:27,507 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145456.png, New: Clicked_Buttonleft_1715145564.png
+2024-05-08 15:19:27,629 - INFO - Clicked Button.left at (60, 431)
+2024-05-08 15:19:29,721 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145567.png
+2024-05-08 15:19:30,764 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145457.png, New: Clicked_Buttonleft_1715145567.png
+2024-05-08 15:19:30,873 - INFO - Clicked Button.left at (59, 459)
+2024-05-08 15:19:32,963 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145570.png
+2024-05-08 15:19:33,998 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145458.png, New: Clicked_Buttonleft_1715145570.png
+2024-05-08 15:19:34,124 - INFO - Clicked Button.left at (57, 512)
+2024-05-08 15:19:36,218 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145573.png
+2024-05-08 15:19:37,263 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145459.png, New: Clicked_Buttonleft_1715145573.png
+2024-05-08 15:25:23,707 - INFO - Clicked Button.left at (175, 1059)
+2024-05-08 15:25:25,916 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145923.png
+2024-05-08 15:25:27,001 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145863.png, New: Clicked_Buttonleft_1715145923.png
+2024-05-08 15:25:27,106 - INFO - Pressed key 'o' ''o''
+2024-05-08 15:25:28,333 - INFO - Pressed key 'o' saved as Pressed_key_'o'_1715145927.png
+2024-05-08 15:25:29,419 - WARNING - Difference found for Pressed key 'o'. Reference: Pressed_key_'o'_1715145865.png, New: Pressed_key_'o'_1715145927.png
+2024-05-08 15:25:29,525 - INFO - Pressed key 'm' ''m''
+2024-05-08 15:25:30,752 - INFO - Pressed key 'm' saved as Pressed_key_'m'_1715145929.png
+2024-05-08 15:25:31,836 - WARNING - Difference found for Pressed key 'm'. Reference: Pressed_key_'m'_1715145865.png, New: Pressed_key_'m'_1715145929.png
+2024-05-08 15:25:31,936 - INFO - Pressed key 's' ''s''
+2024-05-08 15:25:33,174 - INFO - Pressed key 's' saved as Pressed_key_'s'_1715145931.png
+2024-05-08 15:25:34,257 - WARNING - Difference found for Pressed key 's'. Reference: Pressed_key_'s'_1715145866.png, New: Pressed_key_'s'_1715145931.png
+2024-05-08 15:25:34,365 - INFO - Clicked Button.left at (235, 550)
+2024-05-08 15:25:36,515 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145934.png
+2024-05-08 15:25:37,601 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145867.png, New: Clicked_Buttonleft_1715145934.png
+2024-05-08 15:25:37,721 - INFO - Clicked Button.left at (947, 539)
+2024-05-08 15:25:39,828 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145937.png
+2024-05-08 15:25:40,872 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145873.png, New: Clicked_Buttonleft_1715145937.png
+2024-05-08 15:25:41,002 - INFO - Clicked Button.left at (1527, 53)
+2024-05-08 15:25:43,105 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145940.png
+2024-05-08 15:25:44,165 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145876.png, New: Clicked_Buttonleft_1715145940.png
+2024-05-08 15:25:44,277 - INFO - Clicked Button.left at (108, 97)
+2024-05-08 15:25:46,383 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145944.png
+2024-05-08 15:25:47,433 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145879.png, New: Clicked_Buttonleft_1715145944.png
+2024-05-08 15:25:47,557 - INFO - Clicked Button.left at (84, 117)
+2024-05-08 15:25:49,678 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145947.png
+2024-05-08 15:25:50,727 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145881.png, New: Clicked_Buttonleft_1715145947.png
+2024-05-08 15:25:50,832 - INFO - Clicked Button.left at (68, 169)
+2024-05-08 15:25:52,932 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145950.png
+2024-05-08 15:25:53,986 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145882.png, New: Clicked_Buttonleft_1715145950.png
+2024-05-08 15:25:54,097 - INFO - Clicked Button.left at (60, 212)
+2024-05-08 15:25:56,222 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145953.png
+2024-05-08 15:25:57,269 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145884.png, New: Clicked_Buttonleft_1715145953.png
+2024-05-08 15:25:57,385 - INFO - Clicked Button.left at (53, 263)
+2024-05-08 15:25:59,478 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145957.png
+2024-05-08 15:26:00,530 - WARNING - Difference found for Clicked Button.left. Reference: Clicked_Buttonleft_1715145885.png, New: Clicked_Buttonleft_1715145957.png
+2024-05-08 15:26:00,645 - INFO - Clicked Button.left at (54, 300)
+2024-05-08 15:26:02,746 - INFO - Clicked Button.left saved as Clicked_Buttonleft_1715145960.png
