@@ -4,28 +4,54 @@ import pyautogui
 from PIL import Image, ImageChops
 import logging
 import time
+from screeninfo import get_monitors
+from pathlib import Path
+
+import subprocess
+import platform
+
+
+
+
 
 # Set up logging
 logging.basicConfig(filename='gui_tester_advanced.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Create directories for storing screenshots and differences
-screenshots_dir = "screenshots"
-differences_dir = "differences"
-os.makedirs(screenshots_dir, exist_ok=True)
-os.makedirs(differences_dir, exist_ok=True)
-
-# Define a primary monitor region (adjust based on your screen resolution)
-primary_monitor = {
-    "left": 0,
-    "top": 0,
-    "width": 1880,  # Example resolution width
-    "height": 1080  # Adjust height to exclude taskbar (e.g., 40px less)
-}
 
 
-class AdvancedGUITester:
+class GUIHandler:
     def __init__(self):
+        # Create directories for storing screenshots and differences
+        screenshots_dir = Path("output/screenshots")
+        differences_dir = Path("output/differences")
+        os.makedirs(screenshots_dir, exist_ok=True)
+        os.makedirs(differences_dir, exist_ok=True)
+        
+        # Get the primary monitor's resolution
+        #Monitor(x=0, y=0, width=2560, height=1440, width_mm=697, height_mm=392, name='\\\\.\\DISPLAY1', is_primary=True)
+        primary_monitor = get_monitors()[0]
+
+        # Define a primary monitor region (adjust based on your screen resolution)
+        #primary_monitor = {
+           # "left": 0,
+          #  "top": 0,
+         #   "width": 1880,  # Example resolution width
+         #   "height": 1080  # Adjust height to exclude taskbar (e.g., 40px less)
+        #}
+        self.x= primary_monitor.x
+        self.y= primary_monitor.y
+        self.height= primary_monitor.height
+        self.width= primary_monitor.width
         self.logs = []
+    
+    def run_app(app_name):
+        system = platform.system()
+        if system == 'Windows':
+            subprocess.Popen(['start', app_name], shell=True)
+        elif system == 'Linux':
+            subprocess.Popen([app_name], shell=True)
+        else:
+            print("Unsupported operating system")
 
     def click(self, x, y, description="Click"):
         """Simulate a click and log the action."""
@@ -100,4 +126,7 @@ class AdvancedGUITester:
 # Example usage of the AdvancedGUITester with the JSON actions
 if __name__ == "__main__":
     tester = AdvancedGUITester()
+    
+# Example usage
+run_app('calc')  # Opens the calculator on Windows
     tester.run_actions_and_compare("filtered_recorded_actions.json")
