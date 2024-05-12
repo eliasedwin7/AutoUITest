@@ -1,0 +1,61 @@
+{
+    "application_title": "My Dashboard",
+    "elements": [
+        {
+            "name": "Timer Tab",
+            "type": "button",
+            "action": "click",
+            "element_image": "templates/timer_tab.png",
+            "coordinates": {
+                "x": 100,
+                "y": 200
+            },
+            "expected_output": "screenshots/timer_screen.png"
+        },
+        {
+            "name": "Start Timer",
+            "type": "button",
+            "action": "click",
+            "element_image": "templates/start_button.png",
+            "coordinates": {
+                "x": 300,
+                "y": 400
+            },
+            "expected_output": "screenshots/timer_started.png"
+        },
+        {
+            "name": "Input Alarm Name",
+            "type": "textbox",
+            "action": "input_text",
+            "element_image": "templates/alarm_textbox.png",
+            "coordinates": {
+                "x": 400,
+                "y": 500
+            },
+            "expected_output": "screenshots/alarm_named.png",
+            "text_value": "Wake Up!"
+        },
+        {
+            "name": "Stopwatch Tab",
+            "type": "button",
+            "action": "click",
+            "element_image": "templates/stopwatch_tab.png",
+            "coordinates": {
+                "x": 120,
+                "y": 250
+            },
+            "expected_output": "screenshots/stopwatch_screen.png"
+        },
+        {
+            "name": "Start Stopwatch",
+            "type": "button",
+            "action": "click",
+            "element_image": "templates/start_stopwatch_button.png",
+            "coordinates": {
+                "x": 400,
+                "y": 500
+            },
+            "expected_output": "screenshots/stopwatch_running.png"
+        }
+    ]
+}
