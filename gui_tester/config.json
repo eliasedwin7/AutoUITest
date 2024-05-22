@@ -1,0 +1,28 @@
+{
+    "elements": [
+        {
+            "name": "World Clock Button",
+            "description": "Click on the World Clock Button",
+            "type": "button",
+            "action": "click",
+            "element_image": "clock/worldclock_button.png",
+            "expected_output": "clock/worldclock_output.PNG"
+        },
+        {
+            "name": "Stopwatch Button",
+            "description": "Click on the Stopwatch Button",
+            "type": "button",
+            "action": "click",
+            "element_image": "clock/stopwatch_button.png",
+            "expected_output": "clock/stopwatch_output.PNG"
+        },
+        {
+            "name": "Alarm Button",
+            "description": "Click on the Alarm Button",
+            "type": "button",
+            "action": "click",
+            "element_image": "clock/alarm_button.png",
+            "expected_output": "clock/alarm_output.png"
+        }
+    ]
+}
