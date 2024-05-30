@@ -1,0 +1,8 @@
+pyautogui
+opencv-python
+numpy
+easyocr
+pillow
+screeninfo
+scikit-image
+pandas

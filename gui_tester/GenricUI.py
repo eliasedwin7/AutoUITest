@@ -38,7 +38,7 @@ class GUIHandler:
         self.logs = []
 
     def run_app(self, app_name):
-        """Run an application based on the OS."""
+        """Run an application based on the OS and maximize it."""
         system = platform.system()
         try:
             if system == 'Windows':
@@ -47,12 +47,14 @@ class GUIHandler:
                 subprocess.Popen([app_name], shell=True)
             else:
                 logging.error("Unsupported operating system")
+            time.sleep(5)  # Wait for the app to open
+            #self.maximize_window_if_needed()
         except Exception as e:
             logging.error(f"Failed to run application {app_name}: {e}")
             self.search_and_run_app(app_name)
 
     def search_and_run_app(self, app_name):
-        """Search and run the application if it didn't launch directly."""
+        """Search and run the application if it didn't launch directly and maximize it."""
         system = platform.system()
         try:
             if system == 'Windows':
@@ -68,12 +70,30 @@ class GUIHandler:
                 pyautogui.press('enter')
             else:
                 logging.error("Unsupported operating system for search")
+            time.sleep(5)  # Wait for the app to open
+            #self.maximize_window_if_needed()
         except Exception as e:
             logging.error(f"Failed to search and run application {app_name}: {e}")
+
+    # Commented out the maximize window function
+    """
+    def maximize_window_if_needed(self):
+        Maximize the currently active window if it's not already maximized.
+        try:
+            if platform.system() == 'Windows':
+                pyautogui.hotkey('win', 'up')  # Maximize window
+            elif platform.system() == 'Linux':
+                pyautogui.hotkey('ctrl', 'super', 'up')  # Maximize window for some Linux environments
+            time.sleep(3)  # Give some time for the window to maximize
+        except Exception as e:
+            logging.error(f"Failed to maximize the window: {e}")
+    """
 
     def click(self, x, y, description="Click"):
         """Simulate a click and log the action."""
         try:
+            pyautogui.moveTo(self.x + 10, self.y + 10)  # Move cursor to a safe position before clicking
+            time.sleep(1)  # Ensure the cursor is moved before proceeding
             pyautogui.click(self.x + x, self.y + y)
             self.logs.append(f"{description} at ({self.x + x}, {self.y + y})")
             logging.info(f"{description} at ({self.x + x}, {self.y + y})")
@@ -154,52 +174,89 @@ class GUIHandler:
             return False
 
     def find_element_coordinates(self, element_image_path):
-        """Locate an element's coordinates using OpenCV template matching."""
+        """Locate an element's coordinates using simple template matching."""
         try:
             screenshot = np.array(pyautogui.screenshot())
             gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
             template = cv2.imread(element_image_path, 0)
             result = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
-            _, _, _, max_loc = cv2.minMaxLoc(result)
-            h, w = template.shape[:2]
-            return max_loc[0] + w // 2, max_loc[1] + h // 2
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            threshold = 0.5  # Adjust this threshold as needed
+            if max_val >= threshold:
+                h, w = template.shape
+                center_x = max_loc[0] + w // 2
+                center_y = max_loc[1] + h // 2
+                logging.info(f"Element found at ({center_x}, {center_y}) with matching value {max_val}")
+                print(f"Element found at ({center_x}, {center_y}) with matching value {max_val}")
+                return (center_x, center_y), max_val
+            else:
+                logging.error(f"No match found for {element_image_path}. Best match value: {max_val}")
+                print(f"No match found for {element_image_path}. Best match value: {max_val}")
+                return None, max_val
         except Exception as e:
             logging.error(f"Failed to find element coordinates for {element_image_path}: {e}")
-            return None, None
+            print(f"Failed to find element coordinates for {element_image_path}: {e}")
+            return None, 0
 
     def find_text_coordinates(self, text):
         """Find the coordinates (x, y) and width and height of the specified text on the screen."""
         try:
             screenshot = np.array(pyautogui.screenshot())
-            results = self.ocr_reader.readtext(screenshot)
-            for (bbox, recognized_text, _) in results:
+            results = self.ocr_reader.readtext(screenshot, detail=1)
+            for (bbox, recognized_text, confidence) in results:
                 if recognized_text.strip().lower() == text.strip().lower():
                     (top_left, top_right, bottom_right, bottom_left) = bbox
                     x, y = int(top_left[0]), int(top_left[1])
                     w = int(top_right[0] - top_left[0])
                     h = int(bottom_left[1] - top_left[1])
-                    return x, y, w, h
-            return None
+                    logging.info(f"Text '{text}' found at ({x}, {y}, {w}, {h}) with confidence {confidence}")
+                    print(f"Text '{text}' found at ({x}, {y}, {w}, {h}) with confidence {confidence}")
+                    return (x, y, w, h), confidence
+            logging.error(f"Text '{text}' not found on the screen.")
+            return None, 0
         except Exception as e:
             logging.error(f"Failed to find text coordinates for '{text}': {e}")
-            return None
+            print(f"Failed to find text coordinates for '{text}': {e}")
+            return None, 0
 
-    def perform_action(self, element):
+    def perform_action(self, element ,confidence=.75):
         """Perform an action and return the new state, reward, done status."""
         try:
             action = element['action']
+            image_coords = None
+            text_coords = None
+            image_confidence = 0
+            text_confidence = 0
+
             if 'element_image' in element:
-                x, y = self.find_element_coordinates(element['element_image'])
-                if x is None or y is None:
+                image_coords, image_confidence = self.find_element_coordinates(element['element_image'])
+                print(f"Image coordinates: {image_coords}, Confidence: {image_confidence}")
+                if image_coords == (None, None):
                     logging.error("Element image not found on the screen.")
-                    return None, 0, True
-            elif 'text' in element:
-                coordinates = self.find_text_coordinates(element['text'])
-                if coordinates:
-                    x, y, _, _ = coordinates
+
+            if 'name' in element:
+                text_coords, text_confidence = self.find_text_coordinates(element['name'])
+                print(f"Text coordinates: {text_coords}, Confidence: {text_confidence}")
+                if text_coords is None:
+                    logging.error(f"Text '{element['name']}' not found on the screen.")
+
+            if text_coords and text_confidence >= confidence:
+                x, y, _, _ = text_coords
+            elif image_coords and image_confidence >=confidence:
+                x, y = image_coords
+            elif image_coords and text_coords:
+                x_image, y_image = image_coords
+                x_text, y_text, _, _ = text_coords
+                if abs(x_image - x_text) < 50 and abs(y_image - y_text) < 50:  # Adjust the threshold as needed
+                    x, y = (x_image + x_text) // 2, (y_image + y_text) // 2
                 else:
-                    logging.error(f"Text '{element['text']}' not found on the screen.")
+                    logging.error("Image and text coordinates are too far apart.")
                     return None, 0, True
+            else:
+                logging.error("No valid coordinates found.")
+                return None, 0, True
+
+            logging.info(f"Performing action '{action}' on coordinates ({x}, {y})")
 
             if action == "click":
                 self.click(int(x), int(y), element['description'])
@@ -210,6 +267,7 @@ class GUIHandler:
             return new_state, 0, False
         except Exception as e:
             logging.error(f"Failed to perform action {element['description']}: {e}")
+            print(f"Failed to perform action {element['description']}: {e}")
             return None, 0, True
 
     def run_actions_and_compare(self, json_file_path):
@@ -234,8 +292,10 @@ class GUIHandler:
         except Exception as e:
             logging.error(f"Failed to run actions and compare screenshots: {e}")
 
-# Example usage
-if __name__ == "__main__":
-    handler = GUIHandler()
-    handler.run_app('ms-clock:')  # Attempt to open the Clock application
-    handler.run_actions_and_compare("config.json")
+# # Example usage
+# if __name__ == "__main__":
+#     handler = GUIHandler()
+#     handler.run_app('ms-clock:')  # Attempt to open the Clock application
+#     # Comment out the maximize function for now
+#     # handler.maximize_window_if_needed()
+#     handler.run_actions_and_compare("config.json")

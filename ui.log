@@ -1,0 +1,80 @@
+2024-05-30 16:07:23,599 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:08:54,736 - ERROR - Failed to find element coordinates for clock/worldclock_button.png: 'NoneType' object has no attribute 'shape'
+2024-05-30 16:08:54,736 - ERROR - Element image not found on the screen.
+2024-05-30 16:09:12,678 - INFO - Performing action 'click' on coordinates (365, 89)
+2024-05-30 16:09:13,916 - INFO - Click World Clock Button at (365, 89)
+2024-05-30 16:09:16,094 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:09:28,450 - INFO - Performing action 'click' on coordinates (294, 62)
+2024-05-30 16:09:29,711 - INFO - Click on the World Clock Button at (294, 62)
+2024-05-30 16:09:36,882 - INFO - World Clock Button saved as World_Clock_Button_1717049376.png
+2024-05-30 16:09:38,220 - WARNING - Difference found for World Clock Button. Reference: clock/worldclock_output.PNG, New: output\screenshots\World_Clock_Button_1717049376.png
+2024-05-30 16:09:41,090 - INFO - Performing action 'click' on coordinates (1787, 20)
+2024-05-30 16:09:42,334 - INFO - Click on the Stopwatch Button at (1787, 20)
+2024-05-30 16:09:49,559 - INFO - Stopwatch Button saved as Stopwatch_Button_1717049389.png
+2024-05-30 16:13:02,031 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:17:37,322 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:17:44,091 - INFO - Performing action 'click' on coordinates (1794, 20)
+2024-05-30 16:17:45,343 - INFO - Click World Clock Button at (1794, 20)
+2024-05-30 16:19:49,941 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:20:05,033 - INFO - Performing action 'click' on coordinates (1876, 964)
+2024-05-30 16:20:06,265 - INFO - Click World Clock Button at (1876, 964)
+2024-05-30 16:21:01,620 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:21:11,646 - INFO - Performing action 'click' on coordinates (1876, 964)
+2024-05-30 16:21:12,882 - INFO - Click World Clock Button at (1876, 964)
+2024-05-30 16:27:51,104 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:28:08,084 - INFO - Performing action 'click' on coordinates (1875, 578)
+2024-05-30 16:28:09,311 - INFO - Click World Clock Button at (1875, 578)
+2024-05-30 16:33:35,410 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:34:29,932 - INFO - Move Mouse to (57, 261)
+2024-05-30 16:35:13,602 - INFO - Move Mouse to (1876, 964)
+2024-05-30 16:35:18,080 - INFO - Move Mouse to (1876, 964)
+2024-05-30 16:40:59,103 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:41:30,350 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4051559865474701
+2024-05-30 16:44:06,478 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:44:22,563 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:44:54,050 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4051559865474701
+2024-05-30 16:46:07,440 - ERROR - No match found for clock/stopwatch_button.PNG. Best match value: 0.4004886746406555
+2024-05-30 16:46:26,025 - ERROR - No match found for clock/alarm_button.PNG. Best match value: 0.44295400381088257
+2024-05-30 16:48:10,707 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:48:27,175 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.329980731010437
+2024-05-30 16:50:04,308 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:50:35,653 - INFO - Element found at (748, 379) with matching value 0.2074299454689026 using method 1
+2024-05-30 16:52:08,383 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:52:35,144 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4051559865474701
+2024-05-30 16:52:54,961 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:53:34,983 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4050789177417755
+2024-05-30 16:53:35,086 - INFO - Move Mouse to (57, 261)
+2024-05-30 16:53:35,191 - INFO - Move Mouse to (1876, 964)
+2024-05-30 16:53:54,800 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4051559865474701
+2024-05-30 16:54:45,053 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 16:55:16,123 - INFO - Element found at (150, 24) with matching value 0.4050787389278412
+2024-05-30 16:55:38,968 - INFO - Element found at (150, 24) with matching value 0.40515562891960144
+2024-05-30 16:55:51,971 - INFO - Move Mouse to (150, 24)
+2024-05-30 17:15:35,847 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 17:15:53,980 - INFO - Text 'World clock' found at (57, 261, 98, 20) with confidence 0.9973132308518425
+2024-05-30 17:15:56,151 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.4051559865474701
+2024-05-30 17:16:07,087 - ERROR - No match found for clock/worldclock_button.png. Best match value: 0.4051559865474701
+2024-05-30 17:16:07,087 - ERROR - No valid coordinates found.
+2024-05-30 17:18:23,205 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 17:18:31,255 - ERROR - No match found for clock/worldclock_button.png. Best match value: 0.4051559865474701
+2024-05-30 17:18:38,606 - INFO - Text 'World clock' found at (57, 261, 98, 20) with confidence 0.9973132308518425
+2024-05-30 17:18:38,606 - INFO - Performing action 'click' on coordinates (57, 261)
+2024-05-30 17:18:39,831 - INFO - Click World Clock Button at (57, 261)
+2024-05-30 17:18:57,209 - INFO - Text 'World clock' found at (57, 261, 98, 20) with confidence 0.9966838144898615
+2024-05-30 17:18:57,415 - ERROR - No match found for clock/worldclock_button.PNG. Best match value: 0.40515580773353577
+2024-05-30 17:19:10,544 - ERROR - No match found for clock/stopwatch_button.png. Best match value: 0.4004886746406555
+2024-05-30 17:19:17,687 - INFO - Text 'Stopwatch' found at (55, 209, 89, 26) with confidence 0.9999790985286805
+2024-05-30 17:19:17,691 - INFO - Performing action 'click' on coordinates (55, 209)
+2024-05-30 17:19:18,924 - INFO - Click Stopwatch Button at (55, 209)
+2024-05-30 17:19:28,724 - ERROR - No match found for clock/alarm_button.png. Best match value: 0.4429547190666199
+2024-05-30 17:19:37,046 - INFO - Text 'Alarm' found at (57, 161, 52, 20) with confidence 0.781491819725463
+2024-05-30 17:19:37,046 - ERROR - No valid coordinates found.
+2024-05-30 17:20:52,361 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2024-05-30 17:20:57,308 - ERROR - No match found for clock/worldclock_button.png. Best match value: 0.40515580773353577
+2024-05-30 17:21:04,236 - INFO - Text 'World clock' found at (57, 261, 98, 20) with confidence 0.9973132308518425
+2024-05-30 17:21:04,240 - INFO - Performing action 'click' on coordinates (57, 261)
+2024-05-30 17:21:05,474 - INFO - Click World Clock Button at (57, 261)
+2024-05-30 17:21:12,224 - ERROR - No match found for clock/alarm_button.png. Best match value: 0.44295448064804077
+2024-05-30 17:21:19,618 - INFO - Text 'Alarm' found at (57, 161, 52, 20) with confidence 0.781491819725463
+2024-05-30 17:21:19,622 - INFO - Performing action 'click' on coordinates (57, 161)
+2024-05-30 17:21:20,854 - INFO - Click Alarm Button at (57, 161)
