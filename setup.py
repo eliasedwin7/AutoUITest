@@ -2,16 +2,22 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='gui-tester',
+    name='AutoUITest',
     version='0.1.0',
     description='A tool for GUI automation testing',
-    author='Your Name',
-    author_email='your.email@example.com',
+    author='Edwin Alias',
+    author_email='eliasedwin7@gmail.com',
     url='https://github.com/yourusername/gui-tester',  # Adjust URL as needed
     packages=find_packages(),
     install_requires=[
         'pyautogui',
+        'opencv-python',
+        'numpy',
+        'easyocr',
         'pillow',
+        'screeninfo',
+        'scikit-image',
+        'pandas',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
