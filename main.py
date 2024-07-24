@@ -3,7 +3,7 @@ import logging
 import time
 from pathlib import Path
 from src.AutoUITest.gui_handler import GUIHandler
-from AutoUITest.action_recorder import UserActionRecorder  # Ensure this import points to your recorder module
+from  src.AutoUITest.action_recorder import UserActionRecorder  # Ensure this import points to your recorder module
 import argparse
 
 # Set up logging
