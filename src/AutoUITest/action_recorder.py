@@ -5,7 +5,9 @@ import threading
 from pynput import mouse, keyboard
 
 class UserActionRecorder:
-    def __init__(self, idle_time_limit=10):
+    def __init__(self,base_dir,idle_time_limit=10):
+        self.screenshots_dir = self.base_dir / "screenshots"
+        os.makedirs(self.screenshots_dir, exist_ok=True)
         self.actions = []
         self.bounding_box = None
         self.idle_time_limit = idle_time_limit
@@ -83,7 +85,7 @@ class UserActionRecorder:
             screenshot = pyautogui.screenshot(region=self.bounding_box)
         else:
             screenshot = pyautogui.screenshot()
-        screenshot.save(filename)
+        screenshot.save((screenshots_dir/filename))
 
 # Example usage (should be placed in a separate script or the main function)
 if __name__ == "__main__":
