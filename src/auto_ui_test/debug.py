@@ -1,4 +1,7 @@
-# Assuming the code is saved in a file named `debug_test.py`
+"""
+Module to test GUI interactions by performing actions on the Clock application.
+"""
+
 import json
 from pathlib import Path
 from gui_handler import GUIHandler
@@ -8,7 +11,7 @@ base_dir = Path("output")
 handler = GUIHandler(base_dir)
 
 # Attempt to open the Clock application
-handler.run_app('ms-clock:')
+handler.run_app("ms-clock:")
 
 # Perform actions based on the configuration
 config = {
@@ -19,7 +22,7 @@ config = {
             "action": "click",
             "element_image": "clock/worldclock_button.png",
             "expected_output": "clock/worldclock_output.png",
-            "description": "Click World Clock Button"
+            "description": "Click World Clock Button",
         },
         {
             "name": "Stopwatch",
@@ -27,7 +30,7 @@ config = {
             "action": "click",
             "element_image": "clock/stopwatch_button.png",
             "expected_output": "clock/stopwatch_output.png",
-            "description": "Click Stopwatch Button"
+            "description": "Click Stopwatch Button",
         },
         {
             "name": "Alarm",
@@ -35,24 +38,28 @@ config = {
             "action": "click",
             "element_image": "clock/alarm_button.png",
             "expected_output": "clock/alarm_output.png",
-            "description": "Click Alarm Button"
-        }
+            "description": "Click Alarm Button",
+        },
     ]
 }
 
 # Save config to a file
 config_path = base_dir / "config.json"
-with open(config_path, "w") as f:
+with open(config_path, "w", encoding="utf-8") as f:
     json.dump(config, f)
 
 # Uncomment the lines below one by one to run each step
-handler.perform_action(config['elements'][0])  # Perform action on the first element
-handler.perform_action(config['elements'][1])  # Perform action on the second element
-handler.perform_action(config['elements'][2])  # Perform action on the third element
+handler.perform_action(config["elements"][0])  # Perform action on the first element
+handler.perform_action(config["elements"][1])  # Perform action on the second element
+handler.perform_action(config["elements"][2])  # Perform action on the third element
 
 # Compare screenshots
-# Note: You need to take and save the expected output screenshots manually or via the script before comparison
-# handler.compare_screenshots("clock/alarm_output.png", "output/screenshots/Alarm_Button_<timestamp>.png")
+# Note: You need to take and save the expected
+# output screenshots manually or via the script before comparison
+# handler.compare_screenshots(
+#     "clock/alarm_output.png",
+#     "output/screenshots/Alarm_Button_<timestamp>.png"
+# )
 
 # Run all actions and compare - Uncomment if method exists and is implemented
 # handler.run_actions_and_compare("config.json")
