@@ -1,17 +1,19 @@
-# src/auto_ui_test/gui_handler.py
+"""
+Module for handling GUI automation tasks such as running applications, clicking,
+key presses, taking screenshots, comparing screenshots, and extracting text using OCR.
+"""
 
-import json
-import os
-import pyautogui
-import cv2
-import numpy as np
-import easyocr
 import logging
-import time
-from screeninfo import get_monitors
-from pathlib import Path
-import subprocess
+import os
 import platform
+import subprocess
+import time
+from pathlib import Path
+
+import cv2
+import easyocr
+import pyautogui
+from screeninfo import get_monitors
 from skimage.metrics import structural_similarity as ssim
 
 
@@ -32,12 +34,17 @@ class GUIHandler:
         self.screenshots_dir = self.base_dir / "screenshots"
         self.differences_dir = self.base_dir / "differences"
         self.matchable_areas_dir = self.base_dir / "matchable_areas"
+        self.ocr_reader = easyocr.Reader(["en"])
+        self.logs = []
+
         os.makedirs(self.screenshots_dir, exist_ok=True)
         os.makedirs(self.differences_dir, exist_ok=True)
         os.makedirs(self.matchable_areas_dir, exist_ok=True)
 
-        self.ocr_reader = easyocr.Reader(["en"])
+        self._initialize_monitor_settings()
 
+    def _initialize_monitor_settings(self):
+        """Initialize settings for the primary monitor."""
         monitors = get_monitors()
         primary_monitor = next(
             (monitor for monitor in monitors if monitor.is_primary), monitors[0]
@@ -46,7 +53,6 @@ class GUIHandler:
         self.y = primary_monitor.y
         self.height = primary_monitor.height
         self.width = primary_monitor.width
-        self.logs = []
 
     def run_app(self, app_name):
         """
@@ -64,7 +70,7 @@ class GUIHandler:
             else:
                 logging.error("Unsupported operating system")
             time.sleep(5)  # Wait for the app to open
-        except Exception as error:
+        except (subprocess.CalledProcessError, FileNotFoundError) as error:
             logging.error("Failed to run application %s: %s", app_name, error)
             self.search_and_run_app(app_name)
 
@@ -73,7 +79,7 @@ class GUIHandler:
         Search and run an application if it didn't launch directly and maximize it.
 
         Args:
-            app_name (str): Name of thAVe application to search and run.
+            app_name (str): Name of the application to search and run.
         """
         system = platform.system()
         try:
@@ -91,7 +97,7 @@ class GUIHandler:
             else:
                 logging.error("Unsupported operating system for search")
             time.sleep(5)  # Wait for the app to open
-        except Exception as error:
+        except (pyautogui.FailSafeException, OSError) as error:
             logging.error(
                 "Failed to search and run application %s: %s", app_name, error
             )
@@ -106,15 +112,13 @@ class GUIHandler:
             description (str): Description of the click action.
         """
         try:
-            pyautogui.moveTo(
-                self.x + 10, self.y + 10
-            )  # Move cursor to a safe position before clicking
-            time.sleep(1)  # Ensure the cursor is moved before proceeding
+            pyautogui.moveTo(self.x + 10, self.y + 10)  # Safe position
+            time.sleep(1)
             pyautogui.click(self.x + x, self.y + y)
             self.logs.append(f"{description} at ({self.x + x}, {self.y + y})")
             logging.info("%s at (%d, %d)", description, self.x + x, self.y + y)
             time.sleep(2)
-        except Exception as error:
+        except (pyautogui.FailSafeException, OSError) as error:
             logging.error(
                 "Failed to click at (%d, %d): %s", self.x + x, self.y + y, error
             )
@@ -132,7 +136,7 @@ class GUIHandler:
             self.logs.append(f"{description} '{key}'")
             logging.info("%s '%s'", description, key)
             time.sleep(1)
-        except Exception as error:
+        except (pyautogui.FailSafeException, OSError) as error:
             logging.error("Failed to press key '%s': %s", key, error)
 
     def screenshot(self, file_name, description="Screenshot"):
@@ -153,7 +157,7 @@ class GUIHandler:
             logging.info("%s saved as %s", description, file_name)
             time.sleep(1)
             return screenshot_path
-        except Exception as error:
+        except (pyautogui.FailSafeException, OSError) as error:
             logging.error("Failed to take screenshot %s: %s", file_name, error)
             return None
 
@@ -202,35 +206,11 @@ class GUIHandler:
                 thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
             )
 
-            matchable_areas_img1 = img1.copy()
-            matchable_areas_img2 = img2_resized.copy()
-
-            for contour in contours:
-                (x, y, w, h) = cv2.boundingRect(contour)
-                cv2.rectangle(
-                    matchable_areas_img1, (x, y), (x + w, y + h), (0, 255, 0), 2
-                )
-                cv2.rectangle(
-                    matchable_areas_img2, (x, y), (x + w, y + h), (0, 255, 0), 2
-                )
-
-            cv2.imwrite(
-                str(
-                    self.matchable_areas_dir
-                    / f"matchable_areas_img1_{Path(img1_path).stem}.png"
-                ),
-                matchable_areas_img1,
-            )
-            cv2.imwrite(
-                str(
-                    self.matchable_areas_dir
-                    / f"matchable_areas_img2_{Path(img2_path).stem}.png"
-                ),
-                matchable_areas_img2,
-            )
+            self._mark_matchable_areas(img1, contours, img1_path, "img1")
+            self._mark_matchable_areas(img2_resized, contours, img2_path, "img2")
 
             return score >= threshold
-        except Exception as error:
+        except (cv2.error, ValueError) as error:
             logging.error(
                 "Failed to compare screenshots %s and %s: %s",
                 img1_path,
@@ -238,6 +218,19 @@ class GUIHandler:
                 error,
             )
             return False
+
+    def _mark_matchable_areas(self, image, contours, img_path, label):
+        """Mark matchable areas on the image based on contours and save it."""
+        marked_image = image.copy()
+        for contour in contours:
+            (x, y, w, h) = cv2.boundingRect(contour)
+            cv2.rectangle(marked_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        marked_image_path = (
+            self.matchable_areas_dir
+            / f"matchable_areas_{label}_{Path(img_path).stem}.png"
+        )
+        cv2.imwrite(str(marked_image_path), marked_image)
 
     def perform_action(self, element):
         """
@@ -248,59 +241,59 @@ class GUIHandler:
         """
         try:
             if element["action"] == "click":
-                element_image_path = self.base_dir / element["element_image"]
-                location = pyautogui.locateCenterOnScreen(str(element_image_path))
-                if location:
-                    self.click(location.x, location.y, element["description"])
-                else:
-                    logging.error(
-                        "Element image %s not found on screen.",
-                        element["element_image"],
-                    )
+                self._click_element(element)
             elif element["action"] == "key":
                 self.press_key(element["key"], element["description"])
-        except Exception as error:
+        except KeyError as error:
+            logging.error("Invalid element structure: %s", error)
+        except (pyautogui.FailSafeException, OSError) as error:
             logging.error(
-                "Failed to perform action %s: %s", element["description"], error
+                "Failed to perform action %s: %s",
+                element.get("description", "Unknown"),
+                error,
             )
 
-    def extract_text(self, region):
+    def _click_element(self, element):
+        """Click on the element based on its image."""
+        element_image_path = self.base_dir / element["element_image"]
+        location = pyautogui.locateCenterOnScreen(str(element_image_path))
+        if location:
+            self.click(location.x, location.y, element["description"])
+        else:
+            logging.error("Element not found on screen: %s", element["description"])
+
+    def extract_text(self, img_path, lang="en"):
         """
-        Extract text from a region of the screen using OCR.
+        Extract text from an image using OCR.
 
         Args:
-            region (tuple): Tuple containing the region coordinates (x, y, width, height).
+            img_path (Path): Path to the image.
+            lang (str): Language for OCR.
 
         Returns:
             str: Extracted text.
         """
         try:
-            x, y, width, height = region
-            screenshot = pyautogui.screenshot(
-                region=(self.x + x, self.y + y, width, height)
-            )
-            screenshot_path = self.screenshots_dir / f"ocr_{int(time.time())}.png"
-            screenshot.save(screenshot_path)
-            text = self.ocr_reader.readtext(str(screenshot_path), detail=0)
-            extracted_text = " ".join(text)
-            self.logs.append(f"Extracted text: {extracted_text}")
-            logging.info("Extracted text: %s", extracted_text)
-            return extracted_text
-        except Exception as error:
-            logging.error("Failed to extract text from region %s: %s", region, error)
+            result = self.ocr_reader.readtext(str(img_path), detail=0, paragraph=True)
+            text = " ".join(result)
+            logging.info("Extracted text from %s: %s", img_path, text)
+            return text
+        except (cv2.error, ValueError) as error:
+            logging.error("Failed to extract text from image %s: %s", img_path, error)
             return ""
 
-    def save_logs(self, log_file_path):
+    def save_logs(self, file_name="logs.txt"):
         """
-        Save logs to a file.
+        Save logs to a text file.
 
         Args:
-            log_file_path (Path): Path to the log file.
+            file_name (str): Name of the file to save the logs.
         """
+        logs_path = self.base_dir / file_name
         try:
-            with open(log_file_path, "w") as log_file:
+            with open(logs_path, "w", encoding="utf-8") as file:
                 for log in self.logs:
-                    log_file.write(f"{log}\n")
-            logging.info("Logs saved to %s", log_file_path)
-        except Exception as error:
-            logging.error("Failed to save logs to %s: %s", log_file_path, error)
+                    file.write(log + "\n")
+            logging.info("Logs saved to %s", logs_path)
+        except (OSError, IOError) as error:
+            logging.error("Failed to save logs: %s", error)
