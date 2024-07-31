@@ -27,7 +27,10 @@ class GUIHandler:
         """
         Stores settings for the screen dimensions.
         """
-        def __init__(self, x, y, width, height):  # pylint: disable=too-few-public-methods
+
+        def __init__(
+            self, x, y, width, height
+        ):  # pylint: disable=too-few-public-methods
             self.x = x
             self.y = y
             self.width = width
