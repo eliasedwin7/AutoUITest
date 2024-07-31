@@ -24,6 +24,9 @@ class GUIHandler:
     """
 
     class ScreenSettings:
+        """
+        Stores settings for the screen dimensions.
+        """
         def __init__(self, x, y, width, height):
             self.x = x
             self.y = y
@@ -72,11 +75,11 @@ class GUIHandler:
         system = platform.system()
         try:
             if system == "Windows":
-                with subprocess.Popen(["start", app_name], shell=True) as process:
-                    pass  # Optionally, you can handle the process if needed
+                with subprocess.Popen(["start", app_name], shell=True):
+                    pass
             elif system == "Linux":
-                with subprocess.Popen([app_name], shell=True) as process:
-                    pass  # Optionally, you can handle the process if needed
+                with subprocess.Popen([app_name], shell=True):
+                    pass
             else:
                 logging.error("Unsupported operating system")
             time.sleep(5)  # Wait for the app to open
@@ -275,6 +278,6 @@ class GUIHandler:
             extracted_text = " ".join([text for _, text, _ in result])
             logging.info("Extracted text from %s: %s", image_path, extracted_text)
             return extracted_text
-        except Exception as error:
+        except (cv2.error, OSError) as error:
             logging.error("Failed to extract text from %s: %s", image_path, error)
             return ""
