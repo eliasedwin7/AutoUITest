@@ -23,6 +23,13 @@ class GUIHandler:
     taking screenshots, comparing screenshots, and extracting text using OCR.
     """
 
+    class ScreenSettings:
+        def __init__(self, x, y, width, height):
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+
     def __init__(self, base_dir):
         """
         Initialize the GUIHandler.
@@ -36,6 +43,7 @@ class GUIHandler:
         self.matchable_areas_dir = self.base_dir / "matchable_areas"
         self.ocr_reader = easyocr.Reader(["en"])
         self.logs = []
+        self.screen_settings = self.ScreenSettings(0, 0, 0, 0)
 
         os.makedirs(self.screenshots_dir, exist_ok=True)
         os.makedirs(self.differences_dir, exist_ok=True)
@@ -49,10 +57,10 @@ class GUIHandler:
         primary_monitor = next(
             (monitor for monitor in monitors if monitor.is_primary), monitors[0]
         )
-        self.x = primary_monitor.x
-        self.y = primary_monitor.y
-        self.height = primary_monitor.height
-        self.width = primary_monitor.width
+        self.screen_settings.x = primary_monitor.x
+        self.screen_settings.y = primary_monitor.y
+        self.screen_settings.width = primary_monitor.width
+        self.screen_settings.height = primary_monitor.height
 
     def run_app(self, app_name):
         """
@@ -64,9 +72,11 @@ class GUIHandler:
         system = platform.system()
         try:
             if system == "Windows":
-                subprocess.Popen(["start", app_name], shell=True)
+                with subprocess.Popen(["start", app_name], shell=True) as process:
+                    pass  # Optionally, you can handle the process if needed
             elif system == "Linux":
-                subprocess.Popen([app_name], shell=True)
+                with subprocess.Popen([app_name], shell=True) as process:
+                    pass  # Optionally, you can handle the process if needed
             else:
                 logging.error("Unsupported operating system")
             time.sleep(5)  # Wait for the app to open
@@ -112,15 +122,27 @@ class GUIHandler:
             description (str): Description of the click action.
         """
         try:
-            pyautogui.moveTo(self.x + 10, self.y + 10)  # Safe position
+            pyautogui.moveTo(
+                self.screen_settings.x + 10, self.screen_settings.y + 10
+            )  # Safe position
             time.sleep(1)
-            pyautogui.click(self.x + x, self.y + y)
-            self.logs.append(f"{description} at ({self.x + x}, {self.y + y})")
-            logging.info("%s at (%d, %d)", description, self.x + x, self.y + y)
+            pyautogui.click(self.screen_settings.x + x, self.screen_settings.y + y)
+            self.logs.append(
+                f"{description} at ({self.screen_settings.x + x}, {self.screen_settings.y + y})"
+            )
+            logging.info(
+                "%s at (%d, %d)",
+                description,
+                self.screen_settings.x + x,
+                self.screen_settings.y + y,
+            )
             time.sleep(2)
         except (pyautogui.FailSafeException, OSError) as error:
             logging.error(
-                "Failed to click at (%d, %d): %s", self.x + x, self.y + y, error
+                "Failed to click at (%d, %d): %s",
+                self.screen_settings.x + x,
+                self.screen_settings.y + y,
+                error,
             )
 
     def press_key(self, key, description="Key Press"):
@@ -149,7 +171,12 @@ class GUIHandler:
         """
         try:
             screenshot = pyautogui.screenshot(
-                region=(self.x, self.y, self.width, self.height)
+                region=(
+                    self.screen_settings.x,
+                    self.screen_settings.y,
+                    self.screen_settings.width,
+                    self.screen_settings.height,
+                )
             )
             screenshot_path = self.screenshots_dir / file_name
             screenshot.save(screenshot_path)
@@ -231,69 +258,23 @@ class GUIHandler:
             / f"matchable_areas_{label}_{Path(img_path).stem}.png"
         )
         cv2.imwrite(str(marked_image_path), marked_image)
+        logging.info("Marked matchable areas saved as %s", marked_image_path)
 
-    def perform_action(self, element):
-        """
-        Perform an action based on the element's description.
-
-        Args:
-            element (dict): Dictionary containing the action details.
-        """
-        try:
-            if element["action"] == "click":
-                self._click_element(element)
-            elif element["action"] == "key":
-                self.press_key(element["key"], element["description"])
-        except KeyError as error:
-            logging.error("Invalid element structure: %s", error)
-        except (pyautogui.FailSafeException, OSError) as error:
-            logging.error(
-                "Failed to perform action %s: %s",
-                element.get("description", "Unknown"),
-                error,
-            )
-
-    def _click_element(self, element):
-        """Click on the element based on its image."""
-        element_image_path = self.base_dir / element["element_image"]
-        location = pyautogui.locateCenterOnScreen(str(element_image_path))
-        if location:
-            self.click(location.x, location.y, element["description"])
-        else:
-            logging.error("Element not found on screen: %s", element["description"])
-
-    def extract_text(self, img_path, lang="en"):
+    def extract_text(self, image_path):
         """
         Extract text from an image using OCR.
 
         Args:
-            img_path (Path): Path to the image.
-            lang (str): Language for OCR.
+            image_path (str): Path to the image file.
 
         Returns:
-            str: Extracted text.
+            str: Extracted text from the image.
         """
         try:
-            result = self.ocr_reader.readtext(str(img_path), detail=0, paragraph=True)
-            text = " ".join(result)
-            logging.info("Extracted text from %s: %s", img_path, text)
-            return text
-        except (cv2.error, ValueError) as error:
-            logging.error("Failed to extract text from image %s: %s", img_path, error)
+            result = self.ocr_reader.readtext(image_path)
+            extracted_text = " ".join([text for _, text, _ in result])
+            logging.info("Extracted text from %s: %s", image_path, extracted_text)
+            return extracted_text
+        except Exception as error:
+            logging.error("Failed to extract text from %s: %s", image_path, error)
             return ""
-
-    def save_logs(self, file_name="logs.txt"):
-        """
-        Save logs to a text file.
-
-        Args:
-            file_name (str): Name of the file to save the logs.
-        """
-        logs_path = self.base_dir / file_name
-        try:
-            with open(logs_path, "w", encoding="utf-8") as file:
-                for log in self.logs:
-                    file.write(log + "\n")
-            logging.info("Logs saved to %s", logs_path)
-        except (OSError, IOError) as error:
-            logging.error("Failed to save logs: %s", error)
