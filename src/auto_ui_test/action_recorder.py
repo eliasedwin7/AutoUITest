@@ -43,10 +43,10 @@ class UserActionRecorder:
         if self.listeners["keyboard_listener"]:
             self.listeners["keyboard_listener"].stop()
 
-    def on_click(self, x, y, pressed):
+    def on_click(self, x, y,button, pressed):
         """Handle mouse click events."""
         if pressed:
-            self.record_click(x, y)
+            self.record_click(x, y,button)
             self.state["last_action_time"] = time.time()
 
     def on_press(self, key):
@@ -57,9 +57,9 @@ class UserActionRecorder:
             self.record_typing(str(key))
         self.state["last_action_time"] = time.time()
 
-    def record_click(self, x, y):
+    def record_click(self, x, y,button):
         """Record a mouse click action."""
-        self.actions.append({"action": "click", "x": x, "y": y})
+        self.actions.append({"button": str(button),"action": "click", "x": x, "y": y})
         self.update_bounding_box(x, y)
         self.capture_screenshot(f"click_{x}_{y}_{int(time.time())}.png")
 
@@ -125,7 +125,9 @@ class UserActionRecorder:
 
 # Example usage (should be placed in a separate script or the main function)
 if __name__ == "__main__":
-    recorder = UserActionRecorder(base_dir="path/to/your/directory")
+    LOCAL_DIR = Path.home() / 'Downloads'
+    print("Running the UI Recorder")
+    recorder = UserActionRecorder(base_dir=LOCAL_DIR)
     recorder.start_recording()
 
     # Simulate user actions
