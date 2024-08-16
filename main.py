@@ -66,7 +66,7 @@ def main(config_path=None):
         run_from_config(handler, config_path)
     else:
         # Initialize the UserActionRecorder
-        recorder = UserActionRecorder()
+        recorder = UserActionRecorder(base_dir)
         recorded_actions_file = start_recording(recorder)
         print(f"Recorded actions saved to {recorded_actions_file}")
 
