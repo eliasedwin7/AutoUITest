@@ -3,9 +3,7 @@ import logging
 import time
 from pathlib import Path
 from src.auto_ui_test.gui_handler import GUIHandler
-from src.auto_ui_test.action_recorder import (
-    UserActionRecorder,
-)  # Ensure this import points to your recorder module
+from src.auto_ui_test.action_recorder import UserActionRecorder  # Ensure this import points to your recorder module
 import argparse
 
 # Set up logging
@@ -17,10 +15,21 @@ logging.basicConfig(
 
 
 def run_from_config(handler, config_path):
-    with open(config_path, "r") as file:
-        config = json.load(file)
-    elements = config["elements"]
+    """
+    Run actions from a configuration file.
 
+    Args:
+        handler (GUIHandler): The GUI handler instance.
+        config_path (str): Path to the JSON configuration file.
+    """
+    try:
+        with open(config_path, "r") as file:
+            config = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logging.error("Failed to load config file %s: %s", config_path, e)
+        return
+
+    elements = config.get("elements", [])
     for element in elements:
         handler.perform_action(element)
         time.sleep(5)
@@ -28,22 +37,30 @@ def run_from_config(handler, config_path):
         new_screenshot_path = handler.screenshot(new_screenshot, element["name"])
         reference_screenshot = element.get("expected_output")
 
-        if reference_screenshot and not handler.compare_screenshots(
-            reference_screenshot, new_screenshot_path
-        ):
-            print(
-                f"Difference found for {element['name']}. Reference: {reference_screenshot}, New: {new_screenshot_path}"
-            )
-            logging.warning(
-                f"Difference found for {element['name']}. Reference: {reference_screenshot}, New: {new_screenshot_path}"
-            )
-        else:
-            print(
-                f"No differences found for {element['name']}. Reference matches new screenshot."
-            )
+        if reference_screenshot:
+            if not handler.compare_screenshots(reference_screenshot, new_screenshot_path):
+                message = (
+                    f"Difference found for {element['name']}. Reference: {reference_screenshot}, "
+                    f"New: {new_screenshot_path}"
+                )
+                print(message)
+                logging.warning(message)
+            else:
+                message = f"No differences found for {element['name']}. Reference matches new screenshot."
+                print(message)
+                logging.info(message)
 
 
 def start_recording(recorder):
+    """
+    Start recording user actions.
+
+    Args:
+        recorder (UserActionRecorder): The user action recorder instance.
+
+    Returns:
+        str: Path to the saved recorded actions JSON file.
+    """
     recorder.start_recording()
     try:
         print("Recording user actions. Press 'Ctrl+C' to stop recording.")
@@ -56,6 +73,12 @@ def start_recording(recorder):
 
 
 def main(config_path=None):
+    """
+    Main function to run the GUI automation or start recording user actions.
+
+    Args:
+        config_path (str, optional): Path to the JSON configuration file. Defaults to None.
+    """
     # Define the base directory for input and output
     base_dir = Path(__file__).parent
 
