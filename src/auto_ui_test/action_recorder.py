@@ -134,10 +134,10 @@ if __name__ == "__main__":
     recorder.start_recording()
 
     # Simulate user actions
-    time.sleep(5)  # Keep recording for 5 seconds
+    time.sleep(10)  # Keep recording for 5 seconds
 
     # Stop recording
     recorder.stop_recording()
 
     # Save actions to a JSON file
-    recorder.save_to_json("recorded_actions.json")
+    recorder.save_to_json(LOCAL_DIR / "recorded_actions.json")
