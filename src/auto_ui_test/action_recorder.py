@@ -98,7 +98,10 @@ class UserActionRecorder:
                 with self.lock:
                     if not self.state["recording"]:
                         break
-                    if time.time() - self.state["last_action_time"] > self.settings["idle_time_limit"]:
+                    if (
+                        time.time() - self.state["last_action_time"]
+                        > self.settings["idle_time_limit"]
+                    ):
                         self.stop_recording()
                 time.sleep(1)
 
@@ -111,7 +114,7 @@ class UserActionRecorder:
                 pyautogui.click(action["x"], action["y"])
             elif action["action"] == "type":
                 pyautogui.typewrite(action["text"])
-        except Exception as e:
+        except (pyautogui.FailSafeException, pyautogui.ImageNotFoundException) as e:
             print(f"Error performing action {action}: {e}")
 
     def capture_screenshot(self, filename):
@@ -125,7 +128,7 @@ class UserActionRecorder:
 
 # Example usage (should be placed in a separate script or the main function)
 if __name__ == "__main__":
-    LOCAL_DIR = Path.home() / 'Downloads'
+    LOCAL_DIR = Path.home() / "Downloads"
     print("Running the UI Recorder")
     recorder = UserActionRecorder(base_dir=LOCAL_DIR)
     recorder.start_recording()
