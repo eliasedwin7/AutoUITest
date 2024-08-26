@@ -48,7 +48,9 @@ class UserActionRecorder:
     def on_click(self, x, y, button, pressed):
         """Handle mouse click events."""
         if pressed:
-            self.record_action("click", x, y, button=str(button))
+            self.record_action(
+                {"action_type": "click", "x": x, "y": y, "button": str(button)}
+            )
             with self.lock:
                 self.state["last_action_time"] = time.time()
 
@@ -58,7 +60,9 @@ class UserActionRecorder:
             text = key.char
         except AttributeError:
             text = str(key)
-        self.record_action("type", pyautogui.position().x, text=text)
+        self.record_action(
+            {"action_type": "type", "x": pyautogui.position().x, "text": text}
+        )
         with self.lock:
             self.state["last_action_time"] = time.time()
 
@@ -67,8 +71,14 @@ class UserActionRecorder:
         if key == keyboard.Key.esc:
             self.stop_recording()
 
-    def record_action(self, action_type, x, y=None, button=None, text=None):
+    def record_action(self, action_params):
         """Record an action (click or type)."""
+        action_type = action_params.get("action_type")
+        x = action_params.get("x")
+        y = action_params.get("y")
+        button = action_params.get("button")
+        text = action_params.get("text")
+
         monitor = self.get_monitor(x)
         sanitized_text = re.sub(r"[^a-zA-Z0-9]", "_", str(text)) if text else None
         filename_base = (
