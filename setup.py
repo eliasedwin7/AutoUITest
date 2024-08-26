@@ -18,6 +18,7 @@ setup(
         "screeninfo",
         "scikit-image",
         "pandas",
+        "pynput",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

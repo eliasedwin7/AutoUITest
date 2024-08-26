@@ -6,3 +6,4 @@ pillow
 screeninfo
 scikit-image
 pandas
+pynput
