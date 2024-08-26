@@ -112,9 +112,22 @@ class UserActionRecorder:
 
     def save_to_json(self, filename):
         """Save recorded actions to a JSON file."""
+        data = {
+            "bounding_box": self.settings["bounding_box"],
+            "elements": self.actions,
+            "metadata": self.get_metadata(),
+        }
         with open(filename, "w", encoding="utf-8") as file:
-            json.dump(self.actions, file, indent=4)
+            json.dump(data, file, indent=4)
         return filename
+
+    def get_metadata(self):
+        """Gather metadata for the recording session."""
+        return {
+            "start_time": time.ctime(self.state["last_action_time"]),
+            "idle_time_limit": self.settings["idle_time_limit"],
+            "total_actions": len(self.actions),
+        }
 
     def update_bounding_box(self, pos_x, pos_y):
         """Update the bounding box for screenshots."""
