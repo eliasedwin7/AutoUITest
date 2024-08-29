@@ -24,11 +24,7 @@ class UserActionRecorder:
         self.actions = []
         self.settings = {"idle_time_limit": idle_time_limit, "bounding_box": None}
         self.state = {"last_action_time": time.time(), "recording": False}
-        self.listeners = {
-            "mouse_listener": None,
-            "keyboard_listener": None,
-            "stop_listener": None,
-        }
+        self.listeners = {}
         self.lock = threading.Lock()
 
     def start_recording(self):
@@ -38,36 +34,35 @@ class UserActionRecorder:
         self.listeners["mouse_listener"] = mouse.Listener(on_click=self.on_click)
         self.listeners["keyboard_listener"] = keyboard.Listener(on_press=self.on_press)
         self.listeners["stop_listener"] = keyboard.Listener(on_press=self.on_stop)
-        self.listeners["mouse_listener"].start()
-        self.listeners["keyboard_listener"].start()
-        self.listeners["stop_listener"].start()
+        for listener in self.listeners.values():
+            listener.start()
         self.monitor_idle_time()
 
     def stop_recording(self):
         """Stop recording actions."""
         with self.lock:
             self.state["recording"] = False
-        if self.listeners["mouse_listener"]:
-            self.listeners["mouse_listener"].stop()
-        if self.listeners["keyboard_listener"]:
-            self.listeners["keyboard_listener"].stop()
-        if self.listeners["stop_listener"]:
-            self.listeners["stop_listener"].stop()
+        for listener in self.listeners.values():
+            listener.stop()
 
-    def on_click(self, pos_x, pos_y, button, pressed):
+    def on_click(self, x, y, button, pressed):
         """Handle mouse click events."""
         if pressed:
-            self.record_click(pos_x, pos_y, button)
+            self.record_action(
+                {"action_type": "click", "x": x, "y": y, "button": str(button)}
+            )
             with self.lock:
                 self.state["last_action_time"] = time.time()
 
     def on_press(self, key):
         """Handle keyboard press events."""
-        print(key)
         try:
-            self.record_typing(key.char)
+            text = key.char
         except AttributeError:
-            self.record_typing(str(key))
+            text = str(key)
+        self.record_action(
+            {"action_type": "type", "x": pyautogui.position().x, "text": text}
+        )
         with self.lock:
             self.state["last_action_time"] = time.time()
 
@@ -76,52 +71,64 @@ class UserActionRecorder:
         if key == keyboard.Key.esc:
             self.stop_recording()
 
-    def record_click(self, pos_x, pos_y, button):
-        """Record a mouse click action."""
-        monitor = self.get_monitor(pos_x)
-        screenshot_path = self.capture_screenshot(
-            f"click_{pos_x}_{pos_y}_{int(time.time())}.png"
-        )
-        self.actions.append(
-            {
-                "button": str(button),
-                "action": "click",
-                "x": pos_x,
-                "y": pos_y,
-                "monitor": monitor,
-                "screenshot": str(screenshot_path),
-            }
-        )
-        self.update_bounding_box(pos_x, pos_y)
+    def record_action(self, action_params):
+        """Record an action (click or type)."""
+        action_type = action_params.get("action_type")
+        x = action_params.get("x")
+        y = action_params.get("y")
+        button = action_params.get("button")
+        text = action_params.get("text")
 
-    def record_typing(self, text):
-        """Record a typing action."""
-        sanitized_text = re.sub(r"[^a-zA-Z0-9]", "_", str(text))
-        screenshot_path = self.capture_screenshot(
-            f"type_{sanitized_text}_{int(time.time())}.png"
+        monitor = self.get_monitor(x)
+        sanitized_text = re.sub(r"[^a-zA-Z0-9]", "_", str(text)) if text else None
+        filename_base = (
+            f"{action_type}_{sanitized_text or f'{x}_{y}'}_{int(time.time())}"
         )
-        monitor = self.get_monitor(pyautogui.position().x)
-        self.actions.append(
-            {
-                "action": "type",
-                "text": sanitized_text,
-                "monitor": monitor,
-                "screenshot": str(screenshot_path),
-            }
+        screenshot_path = self.capture_screenshot(f"{filename_base}.png")
+        bounding_box_screenshot_path = self.capture_bounding_box_screenshot(
+            f"bbox_{filename_base}.png"
         )
+        action = {
+            "action": action_type,
+            "x": x,
+            "y": y,
+            "monitor": monitor,
+            "screenshot": str(screenshot_path),
+            "bounding_box_screenshot": str(bounding_box_screenshot_path),
+        }
+        if button:
+            action["button"] = button
+        if text:
+            action["text"] = sanitized_text
+        self.actions.append(action)
+        if action_type == "click":
+            self.update_bounding_box(x, y)
 
     def save_to_json(self, filename):
         """Save recorded actions to a JSON file."""
+        data = {
+            "bounding_box": self.settings["bounding_box"],
+            "elements": self.actions,
+            "metadata": self.get_metadata(),
+        }
         with open(filename, "w", encoding="utf-8") as file:
-            json.dump(self.actions, file, indent=4)
+            json.dump(data, file, indent=4)
         return filename
 
-    def update_bounding_box(self, pos_x, pos_y):
+    def get_metadata(self):
+        """Gather metadata for the recording session."""
+        return {
+            "start_time": time.ctime(self.state["last_action_time"]),
+            "idle_time_limit": self.settings["idle_time_limit"],
+            "total_actions": len(self.actions),
+        }
+
+    def update_bounding_box(self, x, y):
         """Update the bounding box for screenshots."""
         box_size = 50
         self.settings["bounding_box"] = (
-            pos_x - box_size,
-            pos_y - box_size,
+            x - box_size,
+            y - box_size,
             box_size * 2,
             box_size * 2,
         )
@@ -142,8 +149,7 @@ class UserActionRecorder:
                         break
                 time.sleep(1)
 
-        idle_thread = threading.Thread(target=check_idle_time, daemon=True)
-        idle_thread.start()
+        threading.Thread(target=check_idle_time, daemon=True).start()
 
     def perform_action(self, action):
         """Perform the recorded action."""
@@ -156,30 +162,33 @@ class UserActionRecorder:
             print(f"Error performing action {action}: {error}")
 
     def capture_screenshot(self, filename):
-        """Capture a screenshot."""
-        if self.settings["bounding_box"]:
-            screenshot = pyautogui.screenshot(region=self.settings["bounding_box"])
-        else:
-            screenshot = pyautogui.screenshot()
+        """Capture a screenshot of the entire screen."""
+        screenshot = pyautogui.screenshot()
         screenshot_path = self.screenshots_dir / filename
         screenshot.save(screenshot_path)
         return screenshot_path
 
-    def get_monitor(self, pos_x):
+    def capture_bounding_box_screenshot(self, filename):
+        """Capture a screenshot of the bounding box."""
+        region = self.settings["bounding_box"]
+        screenshot = (
+            pyautogui.screenshot(region=region) if region else pyautogui.screenshot()
+        )
+        screenshot_path = self.screenshots_dir / filename
+        screenshot.save(screenshot_path)
+        return screenshot_path
+
+    def get_monitor(self, x):
         """Determine which monitor the action is performed on."""
         screen_width, _ = pyautogui.size()
-        if pos_x < screen_width:
-            return 1
-        if pos_x < 2 * screen_width:
-            return 2
-        return 3
+        return (x // screen_width) + 1
 
 
 # Example usage (should be placed in a separate script or the main function)
 if __name__ == "__main__":
-    LOCAL_DIR = Path.home() / "Downloads"
+    DOWNLOADS_DIR = Path.home() / "Downloads"
     print("Running the UI Recorder")
-    recorder = UserActionRecorder(base_dir=LOCAL_DIR)
+    recorder = UserActionRecorder(base_dir=DOWNLOADS_DIR)
     try:
         recorder.start_recording()
 
@@ -192,4 +201,4 @@ if __name__ == "__main__":
         recorder.stop_recording()
 
     # Save actions to a JSON file
-    recorder.save_to_json(LOCAL_DIR / "recorded_actions.json")
+    recorder.save_to_json(DOWNLOADS_DIR / "recorded_actions.json")
