@@ -76,17 +76,25 @@ class GUIHandler:
         system = platform.system()
         try:
             if system == "Windows":
-                with subprocess.Popen(["start", app_name], shell=True):
-                    pass
+                self._run_windows_app(app_name)
             elif system == "Linux":
-                with subprocess.Popen([app_name], shell=True):
-                    pass
+                self._run_linux_app(app_name)
             else:
                 logging.error("Unsupported operating system")
             time.sleep(5)  # Wait for the app to open
         except (subprocess.CalledProcessError, FileNotFoundError) as error:
             logging.error("Failed to run application %s: %s", app_name, error)
             self.search_and_run_app(app_name)
+
+    def _run_windows_app(self, app_name):
+        """Run a Windows application."""
+        with subprocess.Popen(["start", app_name], shell=True):
+            pass
+
+    def _run_linux_app(self, app_name):
+        """Run a Linux application."""
+        with subprocess.Popen([app_name], shell=True):
+            pass
 
     def search_and_run_app(self, app_name):
         """
@@ -98,16 +106,9 @@ class GUIHandler:
         system = platform.system()
         try:
             if system == "Windows":
-                pyautogui.press("win")
-                time.sleep(1)
-                pyautogui.write(app_name)
-                time.sleep(2)
-                pyautogui.press("enter")
+                self._search_and_run_windows_app(app_name)
             elif system == "Linux":
-                pyautogui.hotkey("ctrl", "alt", "t")
-                time.sleep(1)
-                pyautogui.write(f"{app_name} &")
-                pyautogui.press("enter")
+                self._search_and_run_linux_app(app_name)
             else:
                 logging.error("Unsupported operating system for search")
             time.sleep(5)  # Wait for the app to open
@@ -115,6 +116,21 @@ class GUIHandler:
             logging.error(
                 "Failed to search and run application %s: %s", app_name, error
             )
+
+    def _search_and_run_windows_app(self, app_name):
+        """Search and run a Windows application."""
+        pyautogui.press("win")
+        time.sleep(1)
+        pyautogui.write(app_name)
+        time.sleep(2)
+        pyautogui.press("enter")
+
+    def _search_and_run_linux_app(self, app_name):
+        """Search and run a Linux application."""
+        pyautogui.hotkey("ctrl", "alt", "t")
+        time.sleep(1)
+        pyautogui.write(f"{app_name} &")
+        pyautogui.press("enter")
 
     def click(self, x, y, description="Click"):
         """
